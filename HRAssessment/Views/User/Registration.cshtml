@@ -1,0 +1,84 @@
+﻿@model UserVM
+@inject IUserRepository _userRepository
+
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    ViewData["Title"] = "Registration";
+}
+
+<section id="main-content">
+    <section class="wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Registration</h1>
+                <form asp-controller="User" asp-action="Registration" method="post" class="mt-3">
+                    <div class="form-group row">
+                        <label asp-for="FirstName" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <label asp-for="LastName" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <input asp-for="Email" class="form-control" placeholder="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <label asp-for="DOB" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <input asp-for="DOB" class="form-control datepicker" placeholder="Date of Birth" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Password" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <input type="password" asp-for="Password" class="form-control" placeholder="Password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <label asp-for="ConfirmPassword" class="col-sm-2 col-form-label"></label>
+                        <div class="col-sm-4">
+                            <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @*<div asp-validation-summary="All" class="text-danger">
+                    </div>*@
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                            @*Total no of users are: @_userRepository.GetAllUsers().Count()*@
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4">
+                            <a asp-controller="User" asp-action="Login">Sign In</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</section>
+
+<script>
+    $(document).ready(function () {
+        // get date from MyDate input field
+        var date = $(".datepicker").val();
+
+        // use current date as default, if input is empty
+        if (!date) {
+            date = new Date();
+        }
+
+        $('.my-date').datetimepicker({
+            format: 'YYYY/MM/DD',
+            date: date
+        });
+    });
+</script>

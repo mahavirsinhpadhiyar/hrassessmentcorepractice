@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Shared.ViewModels.Consultant.ConsultantVM>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<link href="~/libnew/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+<h2>Consultant List</h2>
+
+<p class="text-right">
+    <a class="btn btn-primary" asp-controller="Consultant" asp-action="InsertUpdateConsultant">Create New</a>
+</p>
+<table class="table dataTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @if (item.IsActive)
+                    {
+                        <label>Active</label>
+                    }
+                    else
+                    {
+                        <label>Not active</label>
+                    }
+                </td>
+                <td>
+                    <a asp-controller="Consultant" asp-action="InsertUpdateConsultant" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="Consultant" asp-action="DeleteConsultant" asp-route-id="@item.Id" data-toggle="modal" data-target="#deleteModal" class="deleteConsultant" consultantId="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure to delete?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary btnDeleteConsultant" href="#">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+<script src="~/libnew/datatables/jquery.dataTables.min.js"></script>
+<script src="~/libnew/datatables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.dataTable').DataTable();
+            debugger;
+            //$(document).on('click', ".deleteConsultant", function () {
+            //    debugger;
+            //});
+            $(".deleteConsultant").on("click", function (event) {
+                $(this).attr("consultantId");
+                $(".btnDeleteConsultant").attr("href", "/Consultant/DeleteConsultant/" + $(this).attr("consultantId"));
+            });
+        });
+    </script>
+}
+

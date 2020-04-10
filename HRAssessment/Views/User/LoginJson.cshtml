@@ -1,0 +1,80 @@
+﻿@*@model HRAssessment.Models.LoginViewModel*@
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html ng-app="hrApp">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - HR Assessment</title>
+
+    <environment include="Development">
+        <link href="~/cssnew/sb-admin-2.min.css" rel="stylesheet" />
+    </environment>
+</head>
+<body ng-controller="UserLoginController">
+
+    <div class="container">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-register-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Sign in HR Assessment!</h1>
+                                    </div>
+                                    <form class="user" name="form" ng-submit="UserLogin()" role="form">
+                                        <div class="form-group">
+                                            <input ng-model="username" type="email" class="form-control form-control-user" id="username" name="username" aria-describedby="emailHelp" placeholder="Enter Email Address..." required>
+                                            <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <input ng-model="password" type="password" class="form-control form-control-user" id="password" name="password" placeholder="password" required>
+                                            <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="rememeberme">Remember Me:</label>
+                                            <input ng-model="rememberme" type="checkbox" class="checkbox-inline" id="rememberme" name="rememberme" placeholder="password">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                                        <span ng-model="ErrorMessage" ng-show="IsError" class="text-danger">{{ErrorMessage}}</span>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" asp-controller="User" asp-action="Register">Create an Account!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <environment include="Development">
+        <script src="~/libnew/jquery/jquery.min.js"></script>
+        <script src="~/libnew/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/libnew/jquery-easing/jquery.easing.min.js"></script>
+    </environment>
+
+    <script src="~/libnew/angular/angular.min.js"></script>
+    <script src="~/libnew/angular/angular-route.min.js"></script>
+    <script src="~/libnew/angular/angular-cookies.min.js"></script>
+
+    <script src="~/js/customjs/HRAssessmentModule.js"></script>
+    <script src="~/js/customjs/user/UserService.js"></script>
+    <script src="~/js/customjs/user/UserController.js"></script>
+
+    <script>
+        //var apiUrl = Configuration.GetSection("AppSettings")
+    </script>
+</body>
+</html>

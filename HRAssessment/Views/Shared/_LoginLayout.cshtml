@@ -1,0 +1,30 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html ng-app="hrApp">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - HR Assessment</title>
+
+    <environment include="Development">
+        <link href="~/cssnew/sb-admin-2.min.css" rel="stylesheet" />
+    </environment>
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <environment include="Development">
+        <script src="~/libnew/jquery/jquery.min.js"></script>
+        <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+        <script src="~/libnew/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/libnew/jquery-easing/jquery.easing.min.js"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
