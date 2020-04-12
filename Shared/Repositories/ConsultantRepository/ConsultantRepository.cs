@@ -63,7 +63,7 @@ namespace Shared.Repositories.ConsultantRepository
             return consultantVM;
         }
 
-        public async Task<bool> SaveConsultant(ConsultantVM model)
+        public async Task<DbStatusCode> SaveConsultant(ConsultantVM model)
         {
             try
             {
@@ -79,25 +79,25 @@ namespace Shared.Repositories.ConsultantRepository
                 var changedVal = await _context.SaveChangesAsync();
 
                 if (changedVal > 0)
-                    return true;
+                    return DbStatusCode.Created;
                 else
                 {
-                    //Set the response status
-                    return false;
+                    return DbStatusCode.DbError;
                 }
             }
             catch (Exception ex)
             {
                 //logging an exception
-                return false;
+                return DbStatusCode.Exception;
             }
         }
 
-        public async Task<bool> UpdateConsultant(ConsultantVM model)
+        public async Task<DbStatusCode> UpdateConsultant(ConsultantVM model)
         {
             try
             {
-                var consultantModel = await _context.Consultants.FirstOrDefaultAsync(m => m.Id == model.Id);
+                //var consultantModel = await GetConsultantDetail(model.Id);
+                 var consultantModel = await _context.Consultants.FirstOrDefaultAsync(m => m.Id == model.Id);
 
                 if (consultantModel != null)
                 {
@@ -112,25 +112,25 @@ namespace Shared.Repositories.ConsultantRepository
                     int changedVal = await _context.SaveChangesAsync();
 
                     if (changedVal > 0)
-                        return true;
+                        return DbStatusCode.Updated;
                     else
                     {
                         //Set the response status
-                        return false;
+                        return DbStatusCode.DbError;
                     }
                 }
                 else
                 {
-                    return false;
+                    return DbStatusCode.NotFound;
                 }
             }
             catch (Exception ex)
             {
                 //logging an exception
-                return false;
+                return DbStatusCode.Exception;
             }
         }
-        public async Task<bool> DeleteConsultant(Guid Id)
+        public async Task<DbStatusCode> DeleteConsultant(Guid Id)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace Shared.Repositories.ConsultantRepository
 
                 if (consultantModel == null)
                 {
-                    return false;
+                    return DbStatusCode.NotFound;
                 }
                 else
                 {
@@ -146,15 +146,15 @@ namespace Shared.Repositories.ConsultantRepository
                     var deleteConsultantVal = await _context.SaveChangesAsync();
 
                     if (deleteConsultantVal > 0)
-                        return true;
+                        return DbStatusCode.Deleted;
                     else
-                        return false;
+                        return DbStatusCode.DbError;
                 }
             }
             catch (Exception ex)
             {
                 //logging an exception
-                return false;
+                return DbStatusCode.Exception;
             }
         }
 

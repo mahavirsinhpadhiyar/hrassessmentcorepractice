@@ -4,3 +4,8 @@
 /HRAssessmentAPI/bin
 /Shared/bin
 /Shared/obj
+/.vs/HRAssessment/DesignTimeBuild
+/.vs/HRAssessment/v15/Server/sqlite3
+/.vs/HRAssessment/v15
+/obj
+/.vs/config

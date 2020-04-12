@@ -9,8 +9,8 @@ namespace Shared.Repositories.ConsultantRepository
     {
         Task<List<ConsultantVM>> GetAllConsultants();
         Task<ConsultantVM> GetConsultantDetail(Guid Id);
-        Task<bool> SaveConsultant(ConsultantVM model);
-        Task<bool> UpdateConsultant(ConsultantVM model);
-        Task<bool> DeleteConsultant(Guid Id);
+        Task<DbStatusCode> SaveConsultant(ConsultantVM model);
+        Task<DbStatusCode> UpdateConsultant(ConsultantVM model);
+        Task<DbStatusCode> DeleteConsultant(Guid Id);
     }
 }
