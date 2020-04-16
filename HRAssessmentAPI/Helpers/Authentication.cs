@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace HRAssessmentAPI.Helpers
 {
+    /// <summary>
+    /// User authentication and jwt token provider method
+    /// </summary>
     public class Authentication
     {
         private readonly AppSettings _appSettings;

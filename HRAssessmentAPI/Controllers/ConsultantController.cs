@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Shared;
+using Shared.Helpers;
 using Shared.Repositories.ConsultantRepository;
 using Shared.ViewModels.Consultant;
 using System;
@@ -8,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace HRAssessmentAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ConsultantController : ControllerBase
@@ -18,6 +22,7 @@ namespace HRAssessmentAPI.Controllers
         {
             this.consultantRepository = consultantRepository;
         }
+        [EnableCors("CorsPolicy")]
         [HttpGet]
         [Route("ConsultantList")]
         public async Task<IActionResult> GetAllConsultant()
@@ -42,6 +47,20 @@ namespace HRAssessmentAPI.Controllers
                 if (consultantDetail == null)
                     return NotFound();
                 return Ok(consultantDetail);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message ?? ex.InnerException.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetTotalConsultantCount")]
+        public async Task<IActionResult> GetTotalConsultantCount()
+        {
+            try
+            {
+                return Ok(await consultantRepository.GetTotalConsultantCount());
             }
             catch (Exception ex)
             {

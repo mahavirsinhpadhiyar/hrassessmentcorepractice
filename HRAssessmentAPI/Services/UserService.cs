@@ -13,6 +13,10 @@ namespace HRAssessmentAPI.Services
 {
     //article like:
     //https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api#users-controller-cs
+    /// <summary>
+    /// user service contains helper methods
+    /// like generate user login json web token
+    /// </summary>
     public interface IUserService
     {
         Task<UserVM> Authenticate(LoginVM loginVM);

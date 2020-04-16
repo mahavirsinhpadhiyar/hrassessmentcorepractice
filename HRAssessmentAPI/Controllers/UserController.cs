@@ -22,7 +22,7 @@ namespace HRAssessmentAPI.Controllers
             _userService = userService;
         }
 
-        [EnableCors("SiteCorsPolicy")]
+        [EnableCors("CorsPolicy")]
         [HttpPost]
 
         public async Task<IActionResult> Login(LoginVM loginVM)

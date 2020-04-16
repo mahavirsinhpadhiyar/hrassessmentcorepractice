@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,18 +34,32 @@ namespace HRAssessmentAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var corsBuilder = new CorsPolicyBuilder();
-            corsBuilder.AllowAnyHeader();
-            corsBuilder.AllowAnyMethod();
-            corsBuilder.AllowAnyOrigin(); // For anyone access.
-            //corsBuilder.WithOrigins("http://localhost:56573"); // for a specific url. Don't add a forward slash on the end!
+            // var corsBuilder = new CorsPolicyBuilder();
+            // corsBuilder.AllowAnyHeader();
+            // corsBuilder.AllowAnyMethod();
+            // corsBuilder.AllowAnyOrigin();// For anyone access.
+            // corsBuilder.AllowCredentials();
+            // corsBuilder.WithOrigins("http://localhost:4200/"); // for a specific url. Don't add a forward slash on the end!
 
             services.AddCors(options =>
             {
-                options.AddPolicy("SiteCorsPolicy", corsBuilder.Build());
+                options.AddPolicy("CorsPolicy",
+                    // builder => {
+                    //     builder.WithOrigins("http://localhost:4200");
+                    // }
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    );
+                // options.AddPolicy("SiteCorsPolicy",corsBuilder.Build());
+                // builder =>  builder.AllowAnyOrigin()
+                // .AllowAnyMethod()
+                // .AllowAnyHeader()
+                // .AllowCredentials());
             });
 
-            services.AddAuthorization();
+            // services.AddAuthorization();
 
             services.AddSwaggerGen(c =>
             {
@@ -95,16 +110,16 @@ namespace HRAssessmentAPI
             })
             .AddJwtBearer(x =>
             {
-                //x.RequireHttpsMetadata = false;
-                //x.SaveToken = true;
-                //x.TokenValidationParameters = new TokenValidationParameters
-                //{
-                //    ValidateIssuerSigningKey = true,
-                //    IssuerSigningKey = new SymmetricSecurityKey(key),
-                //    ValidateIssuer = false,
-                //    ValidateAudience = false
-                //};
-                x.TokenValidationParameters = new TokenValidationParameters
+                 //x.RequireHttpsMetadata = false;
+                 //x.SaveToken = true;
+                 //x.TokenValidationParameters = new TokenValidationParameters
+                 //{
+                 //    ValidateIssuerSigningKey = true,
+                 //    IssuerSigningKey = new SymmetricSecurityKey(key),
+                 //    ValidateIssuer = false,
+                 //    ValidateAudience = false
+                 //};
+                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
@@ -119,6 +134,7 @@ namespace HRAssessmentAPI
             services.AddDbContext<HRADbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("hrConn")));
             services.AddIdentity<AppUser, IdentityRole>()
                     .AddEntityFrameworkStores<HRADbContext>();
+            services.AddSpaStaticFiles();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,7 +152,9 @@ namespace HRAssessmentAPI
             });
 
             app.UseHttpsRedirection();
-            app.UseCors("SiteCorsPolicy");
+            app.UseCors("CorsPolicy");
+            app.UseStaticFiles();
+            // app.UseSpaStaticFiles();
 
             app.UseAuthentication();
 
@@ -146,6 +164,19 @@ namespace HRAssessmentAPI
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
+
+            // app.UseSpa(spa =>
+            // {
+            //     // To learn more about options for serving an Angular SPA from ASP.NET Core,
+            //     // see https://go.microsoft.com/fwlink/?linkid=864501
+
+            //     spa.Options.SourcePath = "ClientApp";
+
+            //     if (env.IsDevelopment())
+            //     {
+            //         spa.UseAngularCliServer(npmScript: "start");
+            //     }
+            // });
         }
     }
 }

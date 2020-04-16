@@ -5,6 +5,12 @@ namespace HRAssessmentAPI.Helpers
 {
     public static class ClaimsPrincipalExtensions
     {
+        /// <summary>
+        /// Get claimed user id from the principles
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="principal">Pass the claim principal</param>
+        /// <returns>Will return logged in user id</returns>
         public static T GetLoggedInUserId<T>(this ClaimsPrincipal principal)
         {
             if (principal == null)
@@ -26,6 +32,12 @@ namespace HRAssessmentAPI.Helpers
             }
         }
 
+        /// <summary>
+        /// Get claimed user name from the principles
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="principal">Pass the claim principal</param>
+        /// <returns>Will return logged in user name</returns>
         public static string GetLoggedInUserName(this ClaimsPrincipal principal)
         {
             if (principal == null)
@@ -34,6 +46,12 @@ namespace HRAssessmentAPI.Helpers
             return principal.FindFirstValue(ClaimTypes.Name);
         }
 
+        /// <summary>
+        /// Get claimed user email from the principles
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="principal">Pass the claim principal</param>
+        /// <returns>Will return logged in user email</returns>
         public static string GetLoggedInUserEmail(this ClaimsPrincipal principal)
         {
             if (principal == null)
