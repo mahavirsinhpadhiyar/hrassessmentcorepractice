@@ -1,4 +1,5 @@
-﻿using Shared.ViewModels.Consultant;
+﻿using Shared.Helpers;
+using Shared.ViewModels.Consultant;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,5 +13,6 @@ namespace Shared.Repositories.ConsultantRepository
         Task<DbStatusCode> SaveConsultant(ConsultantVM model);
         Task<DbStatusCode> UpdateConsultant(ConsultantVM model);
         Task<DbStatusCode> DeleteConsultant(Guid Id);
+        Task<int> GetTotalConsultantCount();
     }
 }

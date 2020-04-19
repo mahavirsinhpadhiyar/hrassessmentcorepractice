@@ -58,14 +58,14 @@ namespace HRAssessment.Controllers
             {
                 if (consultantModel.Id == Guid.Empty)
                 {
-                    if (await _consultantRepository.SaveConsultant(consultantModel) == Shared.DbStatusCode.Created)
+                    if (await _consultantRepository.SaveConsultant(consultantModel) == Shared.Helpers.DbStatusCode.Created)
                         TempData["ConsultantActionResponse"] = true;
                     else
                         TempData["ConsultantActionResponse"] = false;
                 }
                 else
                 {
-                    if (await _consultantRepository.UpdateConsultant(consultantModel) == Shared.DbStatusCode.Updated)
+                    if (await _consultantRepository.UpdateConsultant(consultantModel) == Shared.Helpers.DbStatusCode.Updated)
                         TempData["ConsultantActionResponse"] = true;
                     else
                         TempData["ConsultantActionResponse"] = false;

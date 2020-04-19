@@ -7,7 +7,28 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRAssessment", "HRAssessmen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{3C0E6599-D77C-461E-8732-363E156F4E06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRAssessmentAPI", "HRAssessmentAPI\HRAssessmentAPI.csproj", "{BD5AFDB8-EBEE-41FF-934E-98A4F8C5A433}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRAssessmentAPI", "HRAssessmentAPI\HRAssessmentAPI.csproj", "{BD5AFDB8-EBEE-41FF-934E-98A4F8C5A433}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "HRAssessment-SPA", "HRAssessment-SPA\", "{ECD354E1-258B-4C7E-9EF4-DD2AE951E9E7}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_64373"
+		Debug.AspNetCompiler.PhysicalPath = "HRAssessment-SPA\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64373\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_64373"
+		Release.AspNetCompiler.PhysicalPath = "HRAssessment-SPA\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64373\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "64373"
+		SlnRelativePath = "HRAssessment-SPA\"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +48,10 @@ Global
 		{BD5AFDB8-EBEE-41FF-934E-98A4F8C5A433}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD5AFDB8-EBEE-41FF-934E-98A4F8C5A433}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD5AFDB8-EBEE-41FF-934E-98A4F8C5A433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECD354E1-258B-4C7E-9EF4-DD2AE951E9E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECD354E1-258B-4C7E-9EF4-DD2AE951E9E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECD354E1-258B-4C7E-9EF4-DD2AE951E9E7}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECD354E1-258B-4C7E-9EF4-DD2AE951E9E7}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

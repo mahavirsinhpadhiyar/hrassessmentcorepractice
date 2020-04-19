@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shared.Context;
 using Shared.Entities;
+using Shared.Helpers;
 using Shared.ViewModels.Consultant;
 using System;
 using System.Collections.Generic;
@@ -155,6 +156,18 @@ namespace Shared.Repositories.ConsultantRepository
             {
                 //logging an exception
                 return DbStatusCode.Exception;
+            }
+        }
+
+        public async Task<int> GetTotalConsultantCount(){
+            try
+            {
+                return await _context.Consultants.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                //logging an exception
+                return 0;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Shared;
@@ -11,7 +12,8 @@ using System.Threading.Tasks;
 
 namespace HRAssessmentAPI.Controllers
 {
-    [Authorize]
+    // [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ConsultantController : ControllerBase
@@ -22,7 +24,7 @@ namespace HRAssessmentAPI.Controllers
         {
             this.consultantRepository = consultantRepository;
         }
-        [EnableCors("CorsPolicy")]
+        //[EnableCors("CorsPolicy")]
         [HttpGet]
         [Route("ConsultantList")]
         public async Task<IActionResult> GetAllConsultant()

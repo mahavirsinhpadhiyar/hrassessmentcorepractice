@@ -16,6 +16,7 @@ using Shared.Entities;
 using Shared.Repositories.ConsultantRepository;
 using Shared.Repositories.UserRepository;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -100,41 +101,64 @@ namespace HRAssessmentAPI
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-            // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
+            //Asif jwt configuration
+            var jwtSettings = appSettingsSection.Get<AppSettings>();
+            services.AddAuthentication().AddCookie(config =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                config.SlidingExpiration = true;
+                config.ExpireTimeSpan = TimeSpan.FromMinutes(Convert.ToDouble(10));
+                //config.CookieSecure = CookieSecurePolicy.Always;
             })
-            .AddJwtBearer(x =>
-            {
-                 //x.RequireHttpsMetadata = false;
-                 //x.SaveToken = true;
-                 //x.TokenValidationParameters = new TokenValidationParameters
-                 //{
-                 //    ValidateIssuerSigningKey = true,
-                 //    IssuerSigningKey = new SymmetricSecurityKey(key),
-                 //    ValidateIssuer = false,
-                 //    ValidateAudience = false
-                 //};
-                 x.TokenValidationParameters = new TokenValidationParameters
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = appSettings.Issuer,
-                    ValidAudience = appSettings.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Secret))
-                };
-            });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidAudience = jwtSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+                    };
+                });
+
+            // configure jwt authentication
+            // var appSettings = appSettingsSection.Get<AppSettings>();
+            // var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            // services.AddAuthentication(x =>
+            // {
+            //     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            // })
+            // .AddJwtBearer(x =>
+            // {
+            //     //x.RequireHttpsMetadata = false;
+            //     //x.SaveToken = true;
+            //     //x.TokenValidationParameters = new TokenValidationParameters
+            //     //{
+            //     //    ValidateIssuerSigningKey = true,
+            //     //    IssuerSigningKey = new SymmetricSecurityKey(key),
+            //     //    ValidateIssuer = false,
+            //     //    ValidateAudience = false
+            //     //};
+
+            //      x.TokenValidationParameters = new TokenValidationParameters
+            //      {
+            //          ValidateIssuer = true,
+            //          ValidateAudience = true,
+            //          ValidateLifetime = true,
+            //          ValidateIssuerSigningKey = true,
+            //          ValidIssuer = appSettings.Issuer,
+            //          ValidAudience = appSettings.Audience,
+            //          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.Secret))
+            //      };
+            // });
 
             services.AddDbContext<HRADbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("hrConn")));
             services.AddIdentity<AppUser, IdentityRole>()
                     .AddEntityFrameworkStores<HRADbContext>();
-            services.AddSpaStaticFiles();
+            //services.AddSpaStaticFiles();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -157,6 +181,7 @@ namespace HRAssessmentAPI
             // app.UseSpaStaticFiles();
 
             app.UseAuthentication();
+            // app.UseAuthorization();
 
             app.UseMvc(routes =>
             {
