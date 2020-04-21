@@ -1,8 +1,8 @@
-﻿using Shared.UnitOfWork;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.UnitOfWork;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Shared.Repositories.GenericRepository
@@ -12,35 +12,53 @@ namespace Shared.Repositories.GenericRepository
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly IUnitOfWork _unitOfWork;
+        //private DbSet<T> table = null;
         public GenericRepository(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+            //table = _unitOfWork._context.Set<T>();
         }
-        public void Add(T entity)
+        public async void Add(T entity)
         {
-
-            throw new NotImplementedException();
-            //    _unitOfWork.Context.Set<T>.Add(entity);
+            await _unitOfWork._context.AddAsync(entity);
+            //await table.AddAsync(entity);
         }
 
         public void Delete(T entity)
         {
-            throw new NotImplementedException();
+            //T existing = _unitOfWork._context.Set<T>().Find(entity);
+            //if(existing != null)
+            _unitOfWork._context.Remove(entity);
+            //table.Remove(entity);
         }
 
-        public Task<IEnumerable<T>> Get()
+        public IQueryable<T> GetAll()
         {
-            throw new NotImplementedException();
+            return _unitOfWork._context.Set<T>().AsQueryable<T>();
+            //return await table.ToListAsync();
         }
 
-        public Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate)
+        public async Task<int> GetTotalCount()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork._context.Set<T>().CountAsync();
         }
 
-        public void Update(T entiry)
+        public IQueryable<T> Get(Expression<Func<T, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return _unitOfWork._context.Set<T>().Where(predicate).AsQueryable<T>();
+        }
+
+        public async Task<T> GetSingle(Guid T)
+        {
+            return await _unitOfWork._context.Set<T>().FindAsync(T);
+            //return await table.FindAsync(T);
+        }
+
+        public void Update(T entity)
+        {
+            //table.Attach(entity);
+            _unitOfWork._context.Set<T>().Attach(entity);
+            _unitOfWork._context.Entry(entity).State = EntityState.Modified;
         }
     }
 }

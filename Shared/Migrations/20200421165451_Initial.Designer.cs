@@ -10,7 +10,7 @@ using Shared.Context;
 namespace Shared.Migrations
 {
     [DbContext(typeof(HRADbContext))]
-    [Migration("20200412201955_Initial")]
+    [Migration("20200421165451_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,6 +188,20 @@ namespace Shared.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Shared.Entities.CompanyModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CompanyDescription");
+
+                    b.Property<string>("CompanyName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companys");
+                });
+
             modelBuilder.Entity("Shared.Entities.ConsultantModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -234,9 +248,9 @@ namespace Shared.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bae21bd9-ea00-4748-ad58-4dd3b3faf973"),
+                            Id = new Guid("548c1524-eb2a-406c-bf8c-6ad8fd20ce48"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DOB = new DateTime(2020, 4, 13, 1, 49, 55, 615, DateTimeKind.Local).AddTicks(4399),
+                            DOB = new DateTime(2020, 4, 21, 22, 24, 50, 874, DateTimeKind.Local).AddTicks(8599),
                             Email = "admin@gmail.com",
                             FirstName = "admin",
                             LastName = "admin",

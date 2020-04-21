@@ -1,31 +1,41 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared.Context;
 using Shared.Entities;
 using Shared.Helpers;
+using Shared.Repositories.GenericRepository;
+using Shared.UnitOfWork;
 using Shared.ViewModels.Consultant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Shared.Repositories.ConsultantRepository
+namespace Shared.Services
 {
-    public class ConsultantRepository : IConsultantRepository
+    public interface IConsultantService
     {
-        private readonly HRADbContext _context;
-        //public ConsultantRepository()
-        //{
-        //    _context = new HRADbContext();
-        //}
-        public ConsultantRepository(HRADbContext context)
+        Task<List<ConsultantVM>> GetAllConsultants();
+        Task<ConsultantVM> GetConsultantDetail(Guid Id);
+        Task<DbStatusCode> SaveConsultant(ConsultantVM model);
+        Task<DbStatusCode> UpdateConsultant(ConsultantVM model);
+        Task<DbStatusCode> DeleteConsultant(Guid Id);
+        Task<int> GetTotalConsultantCount();
+    }
+    public class ConsultantService: IConsultantService
+    {
+        private readonly IUnitOfWork unitOfWork;
+        private readonly Repositories.GenericRepository.IGenericRepository<ConsultantModel> genericRepository;
+
+        public ConsultantService(IUnitOfWork unitOfWork, IGenericRepository<ConsultantModel> genericRepository)
         {
-            this._context = context;
+            this.unitOfWork = unitOfWork;
+            this.genericRepository = genericRepository;
         }
+
         public async Task<List<ConsultantVM>> GetAllConsultants()
         {
             try
             {
-                return await _context.Consultants.Select(m => new ConsultantVM()
+                return await genericRepository.GetAll().Select(m => new ConsultantVM()
                 {
                     Id = m.Id,
                     FirstName = m.FirstName,
@@ -46,7 +56,7 @@ namespace Shared.Repositories.ConsultantRepository
         {
             ConsultantVM consultantVM = new ConsultantVM();
 
-            var consultantModel = await _context.Consultants.FirstOrDefaultAsync(m => m.Id == Id);
+            var consultantModel = await genericRepository.Get(e => e.Id == Id).FirstOrDefaultAsync();
             if (consultantModel != null)
             {
                 consultantVM.Id = consultantModel.Id;
@@ -68,7 +78,7 @@ namespace Shared.Repositories.ConsultantRepository
         {
             try
             {
-                _context.Consultants.Add(new ConsultantModel()
+                genericRepository.Add(new ConsultantModel()
                 {
                     Id = Guid.NewGuid(),
                     FirstName = model.FirstName,
@@ -77,7 +87,7 @@ namespace Shared.Repositories.ConsultantRepository
                     IsActive = model.IsActive,
                     IsAdmin = model.IsAdmin
                 });
-                var changedVal = await _context.SaveChangesAsync();
+                var changedVal = await unitOfWork.Commit();
 
                 if (changedVal > 0)
                     return DbStatusCode.Created;
@@ -98,7 +108,7 @@ namespace Shared.Repositories.ConsultantRepository
             try
             {
                 //var consultantModel = await GetConsultantDetail(model.Id);
-                 var consultantModel = await _context.Consultants.FirstOrDefaultAsync(m => m.Id == model.Id);
+                var consultantModel = await genericRepository.Get(e => e.Id == model.Id).FirstOrDefaultAsync();
 
                 if (consultantModel != null)
                 {
@@ -108,9 +118,8 @@ namespace Shared.Repositories.ConsultantRepository
                     consultantModel.IsActive = model.IsActive;
                     consultantModel.IsAdmin = model.IsAdmin;
 
-                    var consultant = _context.Consultants.Attach(consultantModel);
-                    consultant.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    int changedVal = await _context.SaveChangesAsync();
+                    genericRepository.Update(consultantModel);
+                    var changedVal = await unitOfWork.Commit();
 
                     if (changedVal > 0)
                         return DbStatusCode.Updated;
@@ -135,7 +144,7 @@ namespace Shared.Repositories.ConsultantRepository
         {
             try
             {
-                var consultantModel = await _context.Consultants.FirstOrDefaultAsync(m => m.Id == Id);
+                var consultantModel = await genericRepository.Get(e => e.Id == Id).FirstOrDefaultAsync();
 
                 if (consultantModel == null)
                 {
@@ -143,13 +152,16 @@ namespace Shared.Repositories.ConsultantRepository
                 }
                 else
                 {
-                    _context.Consultants.Remove(consultantModel);
-                    var deleteConsultantVal = await _context.SaveChangesAsync();
+                    genericRepository.Delete(consultantModel);
+                    var changedVal = await unitOfWork.Commit();
 
-                    if (deleteConsultantVal > 0)
+                    if (changedVal > 0)
                         return DbStatusCode.Deleted;
                     else
+                    {
+                        //Set the response status
                         return DbStatusCode.DbError;
+                    }
                 }
             }
             catch (Exception ex)
@@ -159,40 +171,17 @@ namespace Shared.Repositories.ConsultantRepository
             }
         }
 
-        public async Task<int> GetTotalConsultantCount(){
+        public async Task<int> GetTotalConsultantCount()
+        {
             try
             {
-                return await _context.Consultants.CountAsync();
+                return await genericRepository.GetTotalCount();
             }
             catch (Exception ex)
             {
                 //logging an exception
                 return 0;
             }
-        }
-
-        public async void Save()
-        {
-            await _context.SaveChangesAsync();
-        }
-
-        private bool disposed = false;
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    _context.Dispose();
-                }
-            }
-            this.disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

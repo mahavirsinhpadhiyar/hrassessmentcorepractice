@@ -1,18 +1,14 @@
 ﻿using Shared.Context;
-using Shared.Repositories.ConsultantRepository;
-using Shared.Repositories.UserRepository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Shared.UnitOfWork
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork: IDisposable
     {
-        //void Complete();
         HRADbContext _context { get; }
-        void Commit();
-        //IUserRepository UserRepository { get; }
-        //IConsultantRepository ConsultantRepository { get; }
+        Task<int> Commit();
     }
 }

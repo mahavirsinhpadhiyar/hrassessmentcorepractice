@@ -12,6 +12,7 @@ namespace Shared.Context
 
         public DbSet<UserModel> UserModels { get; set; }
         public DbSet<ConsultantModel> Consultants { get; set; }
+        public DbSet<CompanyModel> Companys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

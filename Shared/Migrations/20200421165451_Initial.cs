@@ -51,6 +51,19 @@ namespace Shared.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Companys",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CompanyName = table.Column<string>(nullable: true),
+                    CompanyDescription = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companys", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Consultants",
                 columns: table => new
                 {
@@ -193,7 +206,7 @@ namespace Shared.Migrations
             migrationBuilder.InsertData(
                 table: "UserModels",
                 columns: new[] { "Id", "CreatedOn", "DOB", "Email", "FirstName", "LastName", "Password", "Token" },
-                values: new object[] { new Guid("bae21bd9-ea00-4748-ad58-4dd3b3faf973"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 4, 13, 1, 49, 55, 615, DateTimeKind.Local).AddTicks(4399), "admin@gmail.com", "admin", "admin", "Admin@123", null });
+                values: new object[] { new Guid("548c1524-eb2a-406c-bf8c-6ad8fd20ce48"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 4, 21, 22, 24, 50, 874, DateTimeKind.Local).AddTicks(8599), "admin@gmail.com", "admin", "admin", "Admin@123", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -251,6 +264,9 @@ namespace Shared.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Companys");
 
             migrationBuilder.DropTable(
                 name: "Consultants");

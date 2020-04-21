@@ -1,32 +1,37 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Shared.Helpers;
-using Shared.Services;
-using Shared.ViewModels.Consultant;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Helpers;
+using Shared.Repositories;
+using Shared.Services;
+using Shared.ViewModels;
 
 namespace HRAssessmentAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
-    public class ConsultantController : ControllerBase
+    public class CompanyController : ControllerBase
     {
-        private readonly IConsultantService consultantService;
-        public ConsultantController(IConsultantService consultantService)
+        private readonly ICompanyService companyService;
+        public CompanyController(ICompanyService companyService)
         {
-            this.consultantService = consultantService;
+            this.companyService = companyService;
         }
+
         [HttpGet]
-        [Route("ConsultantList")]
-        public async Task<IActionResult> GetAllConsultant()
+        [Route("CompanyList")]
+        public async Task<IActionResult> GetAllCompany()
         {
             try
             {
-                return Ok(await consultantService.GetAllConsultants());
+                return Ok(companyService.GetAllCompanys());
             }
             catch (Exception ex)
             {
@@ -35,15 +40,15 @@ namespace HRAssessmentAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetConsultant")]
-        public async Task<IActionResult> GetSingleConsultant(Guid id)
+        [Route("GetCompany")]
+        public async Task<IActionResult> GetSingleCompany(Guid id)
         {
             try
             {
-                var consultantDetail = await consultantService.GetConsultantDetail(id);
-                if (consultantDetail == null)
+                var companyDetail = await companyService.GetCompanyDetail(id);
+                if (companyDetail == null)
                     return NotFound();
-                return Ok(consultantDetail);
+                return Ok(companyDetail);
             }
             catch (Exception ex)
             {
@@ -52,12 +57,12 @@ namespace HRAssessmentAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetTotalConsultantCount")]
-        public async Task<IActionResult> GetTotalConsultantCount()
+        [Route("GetTotalCompanyCount")]
+        public async Task<IActionResult> GetTotalCompanyCount()
         {
             try
             {
-                return Ok(await consultantService.GetTotalConsultantCount());
+                return Ok(await companyService.GetTotalCompanyCount());
             }
             catch (Exception ex)
             {
@@ -67,13 +72,13 @@ namespace HRAssessmentAPI.Controllers
 
         [HttpPost]
         [Route("Save")]
-        public async Task<IActionResult> InsertNewConsultant(ConsultantVM consultantVM)
+        public async Task<IActionResult> InsertNewCompany(CompanyVM companyVM)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await consultantService.SaveConsultant(consultantVM);
+                    var result = await companyService.SaveCompany(companyVM);
                     if (result == DbStatusCode.Created)
                     {
                         return Ok(HttpStatusCode.Created);
@@ -99,13 +104,13 @@ namespace HRAssessmentAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateConsultant(ConsultantVM consultantVM)
+        public async Task<IActionResult> UpdateCompany(CompanyVM companyVM)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await consultantService.UpdateConsultant(consultantVM);
+                    var result = await companyService.UpdateCompany(companyVM);
                     if (result == DbStatusCode.Updated)
                     {
                         return Ok();
@@ -133,13 +138,13 @@ namespace HRAssessmentAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> RemoveConsultant(Guid id)
+        public async Task<IActionResult> RemoveCompany(Guid id)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await consultantService.DeleteConsultant(id);
+                    var result = await companyService.DeleteCompany(id);
                     if (result == DbStatusCode.Deleted)
                     {
                         return Ok();
