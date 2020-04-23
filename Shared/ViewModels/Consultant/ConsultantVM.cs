@@ -7,6 +7,10 @@ namespace Shared.ViewModels.Consultant
 {
     public class ConsultantVM
     {
+        public ConsultantVM()
+        {
+            CompanyList = new List<CompanyVM>();
+        }
         public Guid Id { get; set; }
         [Required(ErrorMessage = "First Name is required")]
         public string FirstName { get; set; }
@@ -19,5 +23,10 @@ namespace Shared.ViewModels.Consultant
         public bool IsActive { get; set; }
         [Display(Name = "Is Admin")]
         public bool IsAdmin { get; set; }
+        [Required(ErrorMessage = "Company is required")]
+        public Guid CompanyId { get; set; }
+        public string CompanyName { get; set; }
+        public string UserId { get; set; }
+        public List<CompanyVM> CompanyList { get; set; }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shared.Context;
 
 namespace Shared.Migrations
 {
     [DbContext(typeof(HRADbContext))]
-    partial class HRADbContextModelSnapshot : ModelSnapshot
+    [Migration("20200423112719_addUserForeignKeyInAllTables")]
+    partial class addUserForeignKeyInAllTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

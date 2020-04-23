@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Entities;
 using Shared.Helpers;
 using Shared.Repositories;
 using Shared.Services;
@@ -20,9 +23,12 @@ namespace HRAssessmentAPI.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService companyService;
-        public CompanyController(ICompanyService companyService)
+        private readonly UserManager<AppUser> userManager;
+        private string userId;
+        public CompanyController(ICompanyService companyService, UserManager<AppUser> userManager)
         {
             this.companyService = companyService;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -31,7 +37,8 @@ namespace HRAssessmentAPI.Controllers
         {
             try
             {
-                return Ok(companyService.GetAllCompanys());
+                userId = User.FindFirstValue(ClaimTypes.Name);
+                return Ok(companyService.GetAllCompanys(userId));
             }
             catch (Exception ex)
             {
@@ -62,7 +69,8 @@ namespace HRAssessmentAPI.Controllers
         {
             try
             {
-                return Ok(await companyService.GetTotalCompanyCount());
+                userId = User.FindFirstValue(ClaimTypes.Name);
+                return Ok(await companyService.GetTotalCompanyCount(userId));
             }
             catch (Exception ex)
             {
@@ -78,6 +86,7 @@ namespace HRAssessmentAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    companyVM.UserId = User.FindFirstValue(ClaimTypes.Name);
                     var result = await companyService.SaveCompany(companyVM);
                     if (result == DbStatusCode.Created)
                     {
@@ -110,6 +119,7 @@ namespace HRAssessmentAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    companyVM.UserId = User.FindFirstValue(ClaimTypes.Name);
                     var result = await companyService.UpdateCompany(companyVM);
                     if (result == DbStatusCode.Updated)
                     {

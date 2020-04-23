@@ -1,4 +1,7 @@
-﻿namespace Shared.Entities
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Shared.Entities
 {
     public class ConsultantModel : BaseEntity
     {
@@ -7,5 +10,11 @@
         public string Email { get; set; }
         public bool IsActive { get; set; }
         public bool IsAdmin { get; set; }
+        [ForeignKey("Company")]
+        public Guid CompanyId { get; set; }
+        public CompanyModel Company { get; set; }
+        [ForeignKey("AppUser")]
+        public string UserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

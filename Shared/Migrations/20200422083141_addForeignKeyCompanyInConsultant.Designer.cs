@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shared.Context;
 
 namespace Shared.Migrations
 {
     [DbContext(typeof(HRADbContext))]
-    partial class HRADbContextModelSnapshot : ModelSnapshot
+    [Migration("20200422083141_addForeignKeyCompanyInConsultant")]
+    partial class addForeignKeyCompanyInConsultant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,11 +197,7 @@ namespace Shared.Migrations
 
                     b.Property<string>("CompanyName");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Companys");
                 });
@@ -221,13 +219,9 @@ namespace Shared.Migrations
 
                     b.Property<string>("LastName");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Consultants");
                 });
@@ -301,23 +295,12 @@ namespace Shared.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Shared.Entities.CompanyModel", b =>
-                {
-                    b.HasOne("Shared.Entities.AppUser", "AppUser")
-                        .WithMany("Companys")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Shared.Entities.ConsultantModel", b =>
                 {
                     b.HasOne("Shared.Entities.CompanyModel", "Company")
                         .WithMany("Consultants")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Shared.Entities.AppUser", "AppUser")
-                        .WithMany("Consultants")
-                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

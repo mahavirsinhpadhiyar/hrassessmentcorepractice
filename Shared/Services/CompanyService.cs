@@ -1,4 +1,5 @@
-﻿using Shared.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Entities;
 using Shared.Helpers;
 using Shared.Repositories.GenericRepository;
 using Shared.UnitOfWork;
@@ -13,12 +14,12 @@ namespace Shared.Services
 {
     public interface ICompanyService
     {
-        List<CompanyVM> GetAllCompanys();
+        List<CompanyVM> GetAllCompanys(string userId);
         Task<CompanyVM> GetCompanyDetail(Guid Id);
         Task<DbStatusCode> SaveCompany(CompanyVM model);
         Task<DbStatusCode> UpdateCompany(CompanyVM model);
         Task<DbStatusCode> DeleteCompany(Guid Id);
-        Task<int> GetTotalCompanyCount();
+        Task<int> GetTotalCompanyCount(string userId);
     }
     public class CompanyService: ICompanyService
     {
@@ -31,15 +32,16 @@ namespace Shared.Services
             this.genericRepository = genericRepository;
         }
 
-        public List<CompanyVM> GetAllCompanys()
+        public List<CompanyVM> GetAllCompanys(string userId)
         {
             try
             {
-                return genericRepository.GetAll().Select(m => new CompanyVM()
+                return genericRepository.Get(e => e.UserId == userId).Select(m => new CompanyVM()
                 {
                     CompanyDescription = m.CompanyDescription,
                     CompanyName = m.CompanyName,
-                    Id = m.Id
+                    Id = m.Id,
+                    UserId = m.UserId
                 }).ToList();
             }
             catch (Exception ex)
@@ -76,7 +78,8 @@ namespace Shared.Services
                 {
                     Id = Guid.NewGuid(),
                     CompanyName = model.CompanyName,
-                    CompanyDescription = model.CompanyDescription
+                    CompanyDescription = model.CompanyDescription,
+                    UserId = model.UserId
                 });
                 var changedVal = await unitOfWork.Commit();
 
@@ -105,6 +108,7 @@ namespace Shared.Services
                 {
                     companyModel.CompanyName = model.CompanyName;
                     companyModel.CompanyDescription = model.CompanyDescription;
+                    companyModel.UserId = model.UserId;
 
                     genericRepository.Update(companyModel);
                     var changedVal = await unitOfWork.Commit();
@@ -159,11 +163,11 @@ namespace Shared.Services
             }
         }
 
-        public async Task<int> GetTotalCompanyCount()
+        public async Task<int> GetTotalCompanyCount(string userId)
         {
             try
             {
-                return await genericRepository.GetTotalCount();
+                return await genericRepository.Get(e => e.UserId == userId).CountAsync();
             }
             catch (Exception ex)
             {

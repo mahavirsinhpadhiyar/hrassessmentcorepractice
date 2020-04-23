@@ -9,5 +9,6 @@ namespace Shared.ViewModels
         public Guid Id { get; set; }
         public string CompanyName { get; set; }
         public string CompanyDescription { get; set; }
+        public string UserId { get; set; }
     }
 }

@@ -10,5 +10,7 @@ namespace Shared.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DOB { get; set; }
+        public ICollection<ConsultantModel> Consultants { get; set; }
+        public ICollection<CompanyModel> Companys { get; set; }
     }
 }

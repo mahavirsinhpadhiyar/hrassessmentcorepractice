@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Entities;
 using Shared.Helpers;
 using Shared.Services;
 using Shared.ViewModels.Consultant;
 using System;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HRAssessmentAPI.Controllers
@@ -16,9 +19,12 @@ namespace HRAssessmentAPI.Controllers
     public class ConsultantController : ControllerBase
     {
         private readonly IConsultantService consultantService;
-        public ConsultantController(IConsultantService consultantService)
+        private readonly UserManager<AppUser> userManager;
+        private string userId;
+        public ConsultantController(IConsultantService consultantService, UserManager<AppUser> userManager)
         {
             this.consultantService = consultantService;
+            this.userManager = userManager;
         }
         [HttpGet]
         [Route("ConsultantList")]
@@ -26,7 +32,8 @@ namespace HRAssessmentAPI.Controllers
         {
             try
             {
-                return Ok(await consultantService.GetAllConsultants());
+                userId = User.FindFirstValue(ClaimTypes.Name);
+                return Ok(await consultantService.GetAllConsultants(userId));
             }
             catch (Exception ex)
             {
@@ -57,7 +64,8 @@ namespace HRAssessmentAPI.Controllers
         {
             try
             {
-                return Ok(await consultantService.GetTotalConsultantCount());
+                userId = User.FindFirstValue(ClaimTypes.Name);
+                return Ok(await consultantService.GetTotalConsultantCount(userId));
             }
             catch (Exception ex)
             {
@@ -73,6 +81,7 @@ namespace HRAssessmentAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    consultantVM.UserId = User.FindFirstValue(ClaimTypes.Name);
                     var result = await consultantService.SaveConsultant(consultantVM);
                     if (result == DbStatusCode.Created)
                     {
@@ -105,6 +114,7 @@ namespace HRAssessmentAPI.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    consultantVM.UserId = User.FindFirstValue(ClaimTypes.Name);
                     var result = await consultantService.UpdateConsultant(consultantVM);
                     if (result == DbStatusCode.Updated)
                     {

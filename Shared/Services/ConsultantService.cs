@@ -13,12 +13,12 @@ namespace Shared.Services
 {
     public interface IConsultantService
     {
-        Task<List<ConsultantVM>> GetAllConsultants();
+        Task<List<ConsultantVM>> GetAllConsultants(string userId);
         Task<ConsultantVM> GetConsultantDetail(Guid Id);
         Task<DbStatusCode> SaveConsultant(ConsultantVM model);
         Task<DbStatusCode> UpdateConsultant(ConsultantVM model);
         Task<DbStatusCode> DeleteConsultant(Guid Id);
-        Task<int> GetTotalConsultantCount();
+        Task<int> GetTotalConsultantCount(string userId);
     }
     public class ConsultantService: IConsultantService
     {
@@ -31,18 +31,20 @@ namespace Shared.Services
             this.genericRepository = genericRepository;
         }
 
-        public async Task<List<ConsultantVM>> GetAllConsultants()
+        public async Task<List<ConsultantVM>> GetAllConsultants(string userId)
         {
             try
             {
-                return await genericRepository.GetAll().Select(m => new ConsultantVM()
+                return await genericRepository.Get(e => e.UserId == userId).Select(m => new ConsultantVM()
                 {
                     Id = m.Id,
                     FirstName = m.FirstName,
                     LastName = m.LastName,
                     Email = m.Email,
                     IsActive = m.IsActive,
-                    IsAdmin = m.IsAdmin
+                    IsAdmin = m.IsAdmin,
+                    CompanyId = m.CompanyId,
+                    CompanyName = m.Company.CompanyName
                 }).ToListAsync();
             }
             catch (Exception ex)
@@ -65,6 +67,7 @@ namespace Shared.Services
                 consultantVM.Email = consultantModel.Email;
                 consultantVM.IsActive = consultantModel.IsActive;
                 consultantVM.IsAdmin = consultantModel.IsAdmin;
+                consultantVM.CompanyId = consultantModel.CompanyId;
             }
             else
             {
@@ -85,7 +88,9 @@ namespace Shared.Services
                     LastName = model.LastName,
                     Email = model.Email,
                     IsActive = model.IsActive,
-                    IsAdmin = model.IsAdmin
+                    IsAdmin = model.IsAdmin,
+                    CompanyId = model.CompanyId,
+                    UserId = model.UserId
                 });
                 var changedVal = await unitOfWork.Commit();
 
@@ -117,6 +122,7 @@ namespace Shared.Services
                     consultantModel.Email = model.Email;
                     consultantModel.IsActive = model.IsActive;
                     consultantModel.IsAdmin = model.IsAdmin;
+                    consultantModel.UserId = model.UserId;
 
                     genericRepository.Update(consultantModel);
                     var changedVal = await unitOfWork.Commit();
@@ -171,11 +177,11 @@ namespace Shared.Services
             }
         }
 
-        public async Task<int> GetTotalConsultantCount()
+        public async Task<int> GetTotalConsultantCount(string userId)
         {
             try
             {
-                return await genericRepository.GetTotalCount();
+                return await genericRepository.Get(e => e.UserId == userId).CountAsync();
             }
             catch (Exception ex)
             {
